@@ -85,22 +85,14 @@ if(localStorage.getItem("bestBrain")){
     }
 }
 else{
-//     for(let i = 0; i<cars.length;i++){
-//     fetch('https://js-car-proj-more-edits.vercel.app/getBrainData')
-//     .then(response => response.json())
-//     .then(data => {
-//     cars[i].brain=data
-// })
-// .catch(error => console.error('Error loading brain data:', error));
-//     }
-for(let i = 0; i<cars.length;i++){
-fetch('bestBrain.json')
-.then(response => response.json()) // Parse the JSON response
-.then(data => {
-    cars[i].brain = data; // Assign the parsed data to the brain property
-})
-.catch(error => console.error('Error loading brain data:', error));
-}
+    for(let i = 0; i<cars.length;i++){
+        fetch('bestBrain.json')
+        .then(response => response.json()) // Parse the JSON response
+        .then(data => {
+            cars[i].brain = data; // Assign the parsed data to the brain property
+            })
+    .catch(error => console.error('Error loading brain data:', error));
+    }
 }
 
 // // Function to trigger download of JSON data
@@ -127,40 +119,6 @@ fetch('bestBrain.json')
 // // Call the function to trigger the download
 // downloadJSON();
 
-
-const trafficSet1 = [];
-trafficSet1.push(new Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(2), -300, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(1), -300, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(0), -500, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(1), -500, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(1), -700, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(2), -700, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(1), -900, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(0), -900, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(1), -1100, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(2), -1100, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(1), -1300, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(2), -1500, 30, 50, "DUMMY"));
-trafficSet1.push(new Car(road.getLaneCenter(0), -1500, 30, 50, "DUMMY"));
-
-const trafficSet2 = [];
-trafficSet2.push(new Car(road.getLaneCenter(0), -100, 30, 50, "DUMMY"));
-trafficSet2.push(new Car(road.getLaneCenter(1), -300, 30, 50, "DUMMY"));
-trafficSet2.push(new Car(road.getLaneCenter(2), -300, 30, 50, "DUMMY"));
-trafficSet2.push(new Car(road.getLaneCenter(1), -500, 30, 50, "DUMMY"));
-trafficSet2.push(new Car(road.getLaneCenter(0), -500, 30, 50, "DUMMY"));
-trafficSet2.push(new Car(road.getLaneCenter(0), -700, 30, 50, "DUMMY"));
-trafficSet2.push(new Car(road.getLaneCenter(1), -700, 30, 50, "DUMMY"));
-// trafficSet2.push(new Car(road.getLaneCenter(2), -100, 30, 50, "DUMMY"));
-// trafficSet2.push(new Car(road.getLaneCenter(0), -300, 30, 50, "DUMMY"));
-// trafficSet2.push(new Car(road.getLaneCenter(1), -300, 30, 50, "DUMMY"));
-
-//its cooked
-//maybe try fitness half y and half distance from just center of center lane
-
-//animateSet1();
-//animateRandom();
 animate();
 animatePlayer();
 if(twoPlayers){
@@ -187,25 +145,6 @@ function generateCars(N){
     }
     return cars;
 }
-
-const weightY = -0.6; 
-const weightSpeed = 0.4;
-
-// Define the fitness function
-function fitness(car) {
-    // Calculate the fitness score based on the weighted sum of factors
-    return (weightY * car.y) + (weightSpeed * car.speed); // You can add more factors and weights as needed
-}
-
-// Find the best car based on the fitness function
-const bestCar1 = cars.reduce((best, current) => {
-    // Calculate fitness scores for the current and best cars
-    const fitnessCurrent = fitness(current);
-    const fitnessBest = fitness(best);
-
-    // Return the car with the higher fitness score
-    return (fitnessCurrent > fitnessBest) ? current : best;
-}, cars[0]); // Start with the first car as the initial best car
 
 function isGameOver(){
     networkCtx.fillStyle = 'white'; 
@@ -351,96 +290,6 @@ function animatePlayer2(){
     }
 }
 
-function animateSet1(time){
-    for(let i =0; i<trafficSet1.length;i++){
-        trafficSet1[i].update(road.borders,[]);
-    }
-
-    for (let i = 0; i<cars.length;i++){
-        cars[i].update(road.borders, trafficSet1);
-    }
-
-    bestCar = cars.find(
-        c => c.y == Math.min(
-            ...cars.map(c => c.y)
-        ));
-
-    carCanvas.height=window.innerHeight;
-    networkCanvas.height=window.innerHeight;
-    
-    carCtx.save();
-    carCtx.translate(0,-bestCar.y+carCanvas.height*0.7);
-
-    road.draw(carCtx);
-    for(let i =0; i<trafficSet1.length;i++){
-        trafficSet1[i].draw(carCtx, "yellow");
-    }
-
-    carCtx.globalAlpha=0.2;
-    for (let i = 0; i<cars.length;i++){
-        cars[i].draw(carCtx, "white");
-    }
-    carCtx.globalAlpha=1;
-    bestCar.draw(carCtx, "white", true);
-
-    carCtx.restore();
-
-    networkCtx.lineDashOffset=-time/50;
-    Visualizer.drawNetwork(networkCtx,bestCar.brain);
-
-    requestAnimationFrame(animateSet1);
-    // if (isGameOver()==null){
-    //     requestAnimationFrame(animate);
-    // }
-    // else{
-    //     networkCtx.fillText(isGameOver(), 150, 100); 
-    // }
-}
-function animateRandom(time){
-    for(let i =0; i<traffic.length;i++){
-        traffic[i].update(road.borders,[]);
-    }
-
-    for (let i = 0; i<cars.length;i++){
-        cars[i].update(road.borders, traffic);
-    }
-
-    bestCar = cars.find(
-        c => c.y == Math.min(
-            ...cars.map(c => c.y)
-        ));
-
-    carCanvas.height=window.innerHeight;
-    networkCanvas.height=window.innerHeight;
-    
-    carCtx.save();
-    carCtx.translate(0,-bestCar.y+carCanvas.height*0.7);
-
-    road.draw(carCtx);
-    for(let i =0; i<traffic.length;i++){
-        traffic[i].draw(carCtx, "yellow");
-    }
-
-    carCtx.globalAlpha=0.2;
-    for (let i = 0; i<cars.length;i++){
-        cars[i].draw(carCtx, "white");
-    }
-    carCtx.globalAlpha=1;
-    bestCar.draw(carCtx, "white", true);
-
-    carCtx.restore();
-
-    networkCtx.lineDashOffset=-time/50;
-    Visualizer.drawNetwork(networkCtx,bestCar.brain);
-
-    requestAnimationFrame(animateRandom);
-    // if (isGameOver()==null){
-    //     requestAnimationFrame(animate);
-    // }
-    // else{
-    //     networkCtx.fillText(isGameOver(), 150, 100); 
-    // }
-}
 function animate(time){
     for(let i =0; i<traffic.length;i++){
         traffic[i].update(road.borders,[]);
