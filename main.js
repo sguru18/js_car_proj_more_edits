@@ -75,14 +75,14 @@ const cars = generateCars(N);
 let bestCar = cars[0];
 if(localStorage.getItem("bestBrain")){
     for(let i = 0; i<cars.length;i++){
-        // cars[i].brain = JSON.parse(
-        //     localStorage.getItem("bestBrain"));
-        fetch('https://car-project-xi.vercel.app/getBrainData')
-        .then(response => response.json())
-        .then(data => {
-        cars[i].brain=data
-    })
-    .catch(error => console.error('Error loading brain data:', error));
+        cars[i].brain = JSON.parse(
+            localStorage.getItem("bestBrain"));
+    //     fetch('https://car-project-xi.vercel.app/getBrainData')
+    //     .then(response => response.json())
+    //     .then(data => {
+    //     cars[i].brain=data
+    // })
+    // .catch(error => console.error('Error loading brain data:', error));
 
         if(i!=0){
             NeuralNetwork.mutate(cars[i].brain, 0.15);
