@@ -93,12 +93,14 @@ else{
 // })
 // .catch(error => console.error('Error loading brain data:', error));
 //     }
+for(let i = 0; i<cars.length;i++){
 fetch('bestBrain.json')
 .then(response => response.json()) // Parse the JSON response
 .then(data => {
     cars[i].brain = data; // Assign the parsed data to the brain property
 })
 .catch(error => console.error('Error loading brain data:', error));
+}
 }
 
 // // Function to trigger download of JSON data
