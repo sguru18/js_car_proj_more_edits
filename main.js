@@ -73,16 +73,11 @@ player2traffic.push(car3);
 const N = 1;
 const cars = generateCars(N);
 let bestCar = cars[0];
+
 if(localStorage.getItem("bestBrain")){
     for(let i = 0; i<cars.length;i++){
-        // cars[i].brain = JSON.parse(
-        //     localStorage.getItem("bestBrain"));
-        fetch('https://js-car-proj-more-edits.vercel.app/getBrainData')
-        .then(response => response.json())
-        .then(data => {
-        cars[i].brain=data
-    })
-    .catch(error => console.error('Error loading brain data:', error));
+        cars[i].brain = JSON.parse(
+            localStorage.getItem("bestBrain"));
     // fetch('bestBrain.json')
     //     .then(response => response.json()) // Parse the JSON response
     //     .then(data => {
@@ -94,6 +89,16 @@ if(localStorage.getItem("bestBrain")){
         if(i!=0){
             NeuralNetwork.mutate(cars[i].brain, 0.15);
         }
+    }
+}
+else{
+    for(let i = 0; i<cars.length;i++){
+    fetch('https://js-car-proj-more-edits.vercel.app/getBrainData')
+    .then(response => response.json())
+    .then(data => {
+    cars[i].brain=data
+})
+.catch(error => console.error('Error loading brain data:', error));
     }
 }
 
