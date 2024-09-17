@@ -7,7 +7,7 @@ class Car{
 
         this.speed = 0;
         this.acceleration = 0.2;
-        controlType=="DUMMY"?this.maxSpeed = 3:controlType!="AI"?this.maxSpeed=6:this.maxSpeed=5;
+        controlType=="DUMMY"?this.maxSpeed = 1.5:controlType!="AI"?this.maxSpeed=2.5:this.maxSpeed=2;
         this.friction = 0.05;
         this.angle = 0;
         this.damaged = false;
